@@ -53,4 +53,27 @@ https://github.com/public-apis/public-apis
 * To keep the user satisfaction at it's highest, it is important that the program is keeping up with the user. The main bottleneck which will slow the user's experience is the API calls. If the User is making requests as they need a joke, they will be slowed by both their internet connection, and the speed of the API centre. To counter this, I can have a line up of 3 jokes before their current one, so while they are looking at a new joke, the API is calling for a new one. This means that the user is never waiting for the API to process, and will result in higher user enjoyment and satisfaction with the end product.
 
 #### Useability / Accessibility:
-* To keep the software as accessible as possible, ensuring it uses generic system level interactions, i.e Mouse and Keyboard, will mean that the software will automatically be useable with any specialty user controllers that assist in movement and useability.
+* To keep the software as accessible as possible, ensuring it uses generic system level interactions, i.e Mouse and Keyboard, will mean that the software will automatically be useable with any specialty user controllers that assist in movement and useability. i.e Many people with limited movement skills uses custom controllers to navigate their computer, that have custom text inputs, and pointer inputs.
+
+#### Reliability:
+* 
+
+## <ins> Use Cases: <ins>
+***
+Actor: User (A Funny Person)
+
+Preconditions: Internet access; API with jokes is available.
+
+Main Flow:
+
+Search Rock/Mineral – User enters a rock/mineral name (e.g., Obsidian, Quartz); system retrieves and displays details.
+
+Store Rock – User adds the rock to their collection; system confirms storage.
+
+Compare Rocks – User selects rocks; system retrieves and displays comparisons (e.g., hardness, composition, rarity).
+
+Visualise Data – System generates a graph comparing selected rocks.
+
+Remove Rock – User deletes a rock from the collection; system updates storage.
+
+Postconditions: Rock data is retrieved, stored, compared, or removed successfully.
