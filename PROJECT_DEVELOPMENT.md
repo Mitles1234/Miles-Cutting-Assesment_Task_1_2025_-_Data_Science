@@ -56,7 +56,7 @@ https://github.com/public-apis/public-apis
 * To keep the software as accessible as possible, ensuring it uses generic system level interactions, i.e Mouse and Keyboard, will mean that the software will automatically be useable with any specialty user controllers that assist in movement and useability. i.e Many people with limited movement skills uses custom controllers to navigate their computer, that have custom text inputs, and pointer inputs.
 
 #### Reliability:
-* 
+* The system has few points where it can cause a problem with the the functionality of the program. The two main areas where the problems may arise are the User entered portions, and the API retrieval. If the user doesn't correctly enter in data, i.e leaves a portion of a fill in blank, the program will have to check, and return information to the user about how to fix the problem. The next largest issue is the API retrieval. To solve this, having a check for the API's error codes before it displays the information will work to effectively ensure their are no problems with the system.
 
 ## <ins> Use Cases: <ins>
 ***
@@ -66,14 +66,69 @@ Preconditions: Internet access; API with jokes is available.
 
 Main Flow:
 
-Search Rock/Mineral – User enters a rock/mineral name (e.g., Obsidian, Quartz); system retrieves and displays details.
+Get Jokes – The user cycles through jokes, clicking to store or discard them; system gets and displays the jokes.
 
-Store Rock – User adds the rock to their collection; system confirms storage.
+Store Jokes – User adds the jokes to their collection; system confirms storage.
 
-Compare Rocks – User selects rocks; system retrieves and displays comparisons (e.g., hardness, composition, rarity).
+Random Jokes – User requests random joke from their collection; system retrieves and displays a random joke from their collection.
 
-Visualise Data – System generates a graph comparing selected rocks.
+Visualise Jokes – System displays a table with every joke, serperating the setup and punchline.
 
-Remove Rock – User deletes a rock from the collection; system updates storage.
+Remove Joke – User deletes a joke from their collection; system updates storage.
 
-Postconditions: Rock data is retrieved, stored, compared, or removed successfully.
+Postconditions: Joke data is retrieved, stored, randomized, displayed, or removed successfully.
+
+
+## <ins> Design: <ins>
+***
+
+### Gantt Chart:
+![Gantt Chart](Images/GanttChart.png "Gantt Chart")
+
+### Structure Chart:
+![Structure Chart](Images/StructureChart.png "Structure Chart")
+
+### Algorithms:
+
+#### Main Pseudocode:
+```
+BEGIN Main()
+    WHILE Choice is not True:
+        Choice = UserInput
+        IF Want new Joke:
+            Choice = True
+            GetNewJoke()
+        ELIF Want to view jokes:
+            Choice = True
+            JokeCollection()
+        ELSE:
+            DISPLAY Pick New Option
+        ENDIF
+    ENDWHILE
+END Main()
+```
+
+#### Get New Joke:
+```
+BEGIN GetNewJoke()
+    Joke = RetrieveAPI()
+    DISPLAY Joke
+    DISPLAY Thumbs Up Button
+    DISPLAY Thumbs Down Button
+    WHILE User Chooses():
+        IF User Clicks Thumbs Up:
+            JokeCollection(Joke)
+        ELIF User Clicks Thumbs Down:
+            JokeBackLog(Joke)
+
+END Main()
+```
+
+### Data Dictionary: (Format For Joke Collection Storing)
+| Variable | Data Type | Format for Display | Size in Bytes | Size for Display | Description | Example | Validation |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| Joke_# | Integer | NNNN | 4 | 4 | A unique code for each joke, to make sorting for random jokes faster and more reliable. | 1385 | A 4 digit long code |
+| Joke_Setup | String | XXX…XXX | 200 | 200 | The setup of each joke | A man walks into a bar | A string under 201 characters |
+| Joke_Punchline | String | XXX…XXX | 200 | 200 | The punchline of each joke | His friend says, are you okay? | A string under 201 characters |
+
+
