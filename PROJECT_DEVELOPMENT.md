@@ -120,7 +120,25 @@ BEGIN GetNewJoke()
             JokeCollection(Joke)
         ELIF User Clicks Thumbs Down:
             JokeBackLog(Joke)
+        ENDIF
+    ENDWHILE
+END Main()
+```
 
+#### View Collection:
+```
+BEGIN JokeCollection()
+    Collections
+    DISPLAY Joke
+    DISPLAY Thumbs Up Button
+    DISPLAY Thumbs Down Button
+    WHILE User Chooses():
+        IF User Clicks Thumbs Up:
+            JokeCollection(Joke)
+        ELIF User Clicks Thumbs Down:
+            JokeBackLog(Joke)
+        ENDIF
+    ENDWHILE
 END Main()
 ```
 
