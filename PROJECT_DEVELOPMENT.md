@@ -93,16 +93,22 @@ Postconditions: Joke data is retrieved, stored, randomized, displayed, or remove
 #### Main Pseudocode:
 ```
 BEGIN Main()
-    WHILE Choice is not True:
-        Choice = UserInput
-        IF Want new Joke:
-            Choice = True
+    GetNewJoke = Tab Button
+    JokeCollections = Tab Button
+    Help = Tab Button
+
+    WHILE TRUE:
+        IF User Clicks GetNewJoke Tab:
             GetNewJoke()
-        ELIF Want to view jokes:
-            Choice = True
+            BREAK
+        ELIF User Clicks JokeCollections Tab:
             JokeCollection()
+            BREAK
+        ELIF User Clicks Help Tab:
+            Help()
+            BREAK
         ELSE:
-            DISPLAY Pick New Option
+            PASS
         ENDIF
     ENDWHILE
 END Main()
@@ -115,11 +121,16 @@ BEGIN GetNewJoke()
     DISPLAY Joke
     DISPLAY Thumbs Up Button
     DISPLAY Thumbs Down Button
-    WHILE User Chooses():
+
+    WHILE TRUE:
         IF User Clicks Thumbs Up:
             JokeCollection(Joke)
+            BREAK
         ELIF User Clicks Thumbs Down:
             JokeBackLog(Joke)
+            BREAK
+        ELSE:
+            PASS
         ENDIF
     ENDWHILE
 END Main()
@@ -132,13 +143,19 @@ BEGIN JokeCollection()
     DISPLAY Joke
     DISPLAY Thumbs Up Button
     DISPLAY Thumbs Down Button
-    WHILE User Chooses():
+
+    WHILE TRUE:
         IF User Clicks Thumbs Up:
             JokeCollection(Joke)
+            BREAK
         ELIF User Clicks Thumbs Down:
             JokeBackLog(Joke)
+            BREAK
+        ELSE:
+            PASS
         ENDIF
     ENDWHILE
+
 END Main()
 ```
 
