@@ -125,10 +125,8 @@ BEGIN GetNewJoke()
     WHILE TRUE:
         IF User Clicks Thumbs Up:
             JokeCollection(Joke)
-            BREAK
         ELIF User Clicks Thumbs Down:
             JokeBackLog(Joke)
-            BREAK
         ELSE:
             PASS
         ENDIF
@@ -139,18 +137,26 @@ END Main()
 #### View Collection:
 ```
 BEGIN JokeCollection()
-    Collections
-    DISPLAY Joke
-    DISPLAY Thumbs Up Button
-    DISPLAY Thumbs Down Button
+    Collections[] = Collections.CSV
+    DISPLAY Collections[]
+    DISPLAY Random Joke Button
+    DISPLAY Random Joke
+    DISPLAY Manual Add Button
+    DISPLAY Remove Button
 
     WHILE TRUE:
-        IF User Clicks Thumbs Up:
-            JokeCollection(Joke)
-            BREAK
-        ELIF User Clicks Thumbs Down:
-            JokeBackLog(Joke)
-            BREAK
+        IF User Clicks Random Joke Button:
+            JokeCollection('Random')
+            DISPLAY Random Joke
+
+        ELIF User Clicks Manual Add Button:
+            NewJokeSetup(DISPLAY Text Box - Setup)
+            NewJokePunchline(DISPLAY Text Box - Punchline)
+            Collections[].APPEND(NewJokeSetup, NewJokePunchline)
+
+        ELIF User Clicks Remove Button:
+            RemoveJoke(DISPLAY Text Box - Which Joke?)
+            Collections[].REMOVE(RemoveJoke)
         ELSE:
             PASS
         ENDIF
@@ -167,3 +173,4 @@ END Main()
 | Joke_Punchline | String | XXX…XXX | 200 | 200 | The punchline of each joke | His friend says, are you okay? | A string under 201 characters |
 
 
+Development:
