@@ -7,14 +7,15 @@ import tkinter as tk
 from tkinter import ttk
 
 #--- Setup Collections ---
-Joke_df = pd.read_csv('Collections.csv')
+# Joke_df = pd.read_csv('Collections.csv') 
+Joke_df = pd.DataFrame(columns=['Setup', 'Punchline'])
 
 #--- API ---
-JokeAPI = requests.get('https://api.jokes.one/jod?category=knock-knock')
+
 
 #------ GUI Setup ------
 top = Tk()
-top.geometry('600x400')s
+top.geometry('600x400')
 top.title('A Funny App')
 
 notebook = ttk.Notebook(top)
@@ -34,4 +35,58 @@ notebook.add(frame1, text='Joke Curation')
 notebook.add(frame2, text='Collections')
 notebook.add(frame3, text='Help')
 
-ThumbsUp = Radiobutton(frame1, text='Albury', variable=ChoiceLocation, value='Albury', cursor="hand2", command=Graph)
+JokeDisplaySetup = tk.Label(frame1, text="")
+JokeDisplayPunchline = tk.Label(frame1, text="")
+
+def JokeCuration():
+    global JokeAPI
+    def DisplayJokes():
+        global JokeAPI, JokeDisplaySetup, JokeDisplaySetup
+        
+        JokeAPI = requests.get('https://joke.deno.dev/')
+        JokeDisplaySetup.config(text = f'{JokeAPI.json()['setup']}')
+        JokeDisplayPunchline.config(text = f'{JokeAPI.json()['punchline']}')
+        
+        JokeDisplaySetup.place(x=10, y=50)
+        JokeDisplayPunchline.place(x=10, y=75)
+        
+    NewJoke = tk.Button(frame1, 
+                text="↻ NewJoke", 
+                command=DisplayJokes,
+                anchor="center",
+                bd=3,
+                cursor="hand2",
+                fg="black",
+                font=("Arial", 12),
+                height=2,
+                justify="center",
+                pady=5,
+                width=15,
+                wraplength=300)
+    NewJoke.place(x=50, y=300)
+    NewJoke = tk.Button(frame1, 
+                text="👍 Store Joke", 
+                command=Collections(JokeAPI.json()['setup'], JokeAPI.json()['punchline']),
+                anchor="center",
+                bd=3,
+                cursor="hand2",
+                fg="black",
+                font=("Arial", 12),
+                height=2,
+                justify="center",
+                pady=5,
+                width=15,
+                wraplength=300)
+    NewJoke.place(x=300, y=300)
+
+def Collections(Setup, Punchline):
+    NewJoke = {
+    "Setup":[Setup], 
+    "Punchline": [Punchline]
+}
+    Joke_df = pd.concat([Joke_df, NewJoke])
+    
+    Joke_df
+
+JokeCuration()
+top.mainloop()
