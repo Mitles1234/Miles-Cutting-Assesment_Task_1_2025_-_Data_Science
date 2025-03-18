@@ -3,6 +3,7 @@
 ## Notes for Later Miles:
 https://jokes.one/api/joke/#jodc-python
 https://github.com/public-apis/public-apis
+https://deno.land/x/joke@v2.0.0
 
 ## <ins> Requirements: <ins>
 ***
