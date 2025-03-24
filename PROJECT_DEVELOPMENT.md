@@ -24,7 +24,7 @@ https://deno.land/x/joke@v2.0.0
 ## <ins> Specifications: <ins>
 ***
 ### Functional Specifications:
-#### User Requirements:
+s#### User Requirements:
 * Select whether a joke is good, and worth keeping in their collection, or not, and be discarded.
 * View their collection of jokes in a easy to read table that separates the main line and the punch line.
 * Manually add a Joke to their collection.
