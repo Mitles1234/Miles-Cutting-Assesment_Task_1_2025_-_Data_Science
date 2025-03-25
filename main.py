@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 from tkinter import *
 from pandastable import Table, TableModel
-
 import tkinter as tk
 from tkinter import ttk
 
@@ -15,7 +14,6 @@ top = Tk()
 top.geometry('600x400')
 top.title('A Funny App')
 top.iconbitmap('OtherFiles/AppIcon.ico')
-
 
 notebook = ttk.Notebook(top)
 notebook.pack(pady=15, expand=True)
@@ -38,8 +36,10 @@ JokeDisplaySetup = tk.Label(frame1, text="")
 JokeDisplayPunchline = tk.Label(frame1, text="")
 
 #--- Setup for Table ---
-pt = Table(frame2, dataframe=Joke_df, showtoolbar=True, showstatusbar=True)
+pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=True)
 pt.show()
+
+
 
 def JokeCuration():
     global JokeAPI
@@ -69,6 +69,7 @@ def JokeCuration():
                 width=15,
                 wraplength=300)
     DiscardJoke.place(x=300, y=300)
+    
     StoreJoke = tk.Button(frame1, 
                 text="👍 Store Joke", 
                 command=lambda: [Collections(JokeAPI.json()['setup'], JokeAPI.json()['punchline']), DisplayJokes(), Joke_df.to_csv(path_or_buf='Collections.csv', index=False)],
@@ -83,6 +84,7 @@ def JokeCuration():
                 width=15,
                 wraplength=300)
     StoreJoke.place(x=50, y=300)
+    
 
 def Collections(Setup, Punchline):
     global Joke_df, NewJoke, pt
@@ -107,20 +109,19 @@ def Collections(Setup, Punchline):
         pt.destroy()
     except:
         pass
-    pt = Table(frame2, dataframe=Joke_df, showtoolbar=True, showstatusbar=True)
-    pt.adjustColumnWidths()
+    
+    pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=True)
     pt.show()
     
 
+def SaveUpdates():
+    global top, Joke_df
+    Joke_df.to_csv(path_or_buf='Collections.csv', index=False)
+    top.destroy()
+    
+top.protocol('WM_DELETE_WINDOW', SaveUpdates) # call function() when window is closed
+
 
 JokeCuration()
-inputtxt = tk.Text(frame2, 
-                    height = 1, 
-                    width = 20) 
-    
-inputtxt.place(x=1600, y=180) 
-
-DeleteText = tk.Label(frame1, text="")
-
     
 top.mainloop()
