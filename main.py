@@ -9,6 +9,7 @@ import hashlib
 
 #--- Setup Collections ---
 Joke_df = pd.read_csv('Collections.csv') 
+Login_df = pd.read_csv('Login.csv')
 
 Username = 'Guest'
 Password = 'Guest1'
@@ -193,6 +194,7 @@ def Collections(Setup, Punchline):
 def SaveUpdates():
     global top, Joke_df
     Joke_df.to_csv(path_or_buf='Collections.csv', index=False)
+    Login_df.to_csv(path_or_buf='Login.csv', index=False)
     '''
     newWindow = Toplevel(top)
  
@@ -220,21 +222,19 @@ def Login():
     Username = tk.Label(frame4, text="Username:").place(x=50, y=50)
     Password = tk.Label(frame4, text="Password:").place(x=50, y=100)
 
-    UsernameInput = tk.Text(frame4,
-                height = 1, 
+    UsernameInput = tk.Entry(frame4,
                 width = 20
                 )
     UsernameInput.place(x=150, y=50) 
     
-    PasswordInput = tk.Text(frame4,
-                height = 1, 
+    PasswordInput = tk.Entry(frame4,
                 width = 20
                 )
     PasswordInput.place(x=150, y=100)
     
     Login = tk.Button(frame4, 
                 text="Login", 
-                command=lambda: [Account(UsernameInput.get(1.0, 'end'), PasswordInput.get(1.0, 'end'))],
+                command=lambda: [Account(UsernameInput.get().strip(), PasswordInput.get().strip())], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
                 anchor="center",
                 bd=3,
                 cursor="hand2",
@@ -247,6 +247,35 @@ def Login():
                 wraplength=300,
                 bg="#3bccaa").place(x=50, y=150)
     
+    UsernameCreate = tk.Label(frame4, text="Username:").place(x=50, y=200)
+    PasswordCreate = tk.Label(frame4, text="Password:").place(x=50, y=250)
+
+    UsernameCreateInput = tk.Entry(frame4,
+                width = 20
+                )
+    UsernameCreateInput.place(x=150, y=200) 
+    
+    PasswordCreateInput = tk.Entry(frame4,
+                width = 20
+                )
+    PasswordCreateInput.place(x=150, y=250)
+    
+    Login = tk.Button(frame4, 
+                text="Create Account", 
+                command=lambda: [CreateAccount(UsernameCreateInput.get().strip(), PasswordCreateInput.get().strip())], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
+                anchor="center",
+                bd=3,
+                cursor="hand2",
+                fg="black",
+                font=("Arial", 12),
+                height=1,
+                justify="center",
+                pady=5,
+                width=5,
+                wraplength=300,
+                bg="#3bccaa").place(x=50, y=300)
+    
+    
     def Account(Name, Pass):
         global LoginSuccess
 
@@ -256,6 +285,25 @@ def Login():
         else:
             LoginSuccess = tk.Label(frame4, text='Login UnSuccessful').place(x=50, y=200)
             print(Name,Pass)
+
+    def CreateAccount(Username, Password):
+        global Login_df
+        Username = Username.join(Username.splitlines())
+        Password = Password.join(Password.splitlines())
+        Username = hashlib.sha256()
+        Password = hashlib.sha256()
+        NewLogin = {
+        "Username": Username, 
+        "Password": Password, 
+        }
+
+        # Create a dictionary with the data for the new row
+
+        # Inserting the new row
+        Login_df.loc[len(Login_df)] = NewLogin
+
+        # Reset the index
+        Login_df = Login_df.reset_index(drop=True)
 
 
 JokeCuration()
