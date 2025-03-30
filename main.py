@@ -200,14 +200,20 @@ def JokeProgram():
 
     def SaveUpdates():
         global JokeWindow, Joke_df, Username
-        print(Username)
         try:
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
         except:
             os.mkdir(f'Users\{Username}')
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
 
-        JokeWindow.destroy()
+        try:
+            JokeWindow.destroy()
+        except:
+            pass
+        try:
+            top.destroy()
+        except:
+            pass
         
 
     JokeWindow.protocol('WM_DELETE_WINDOW', SaveUpdates) # call function() when window is closed
@@ -285,20 +291,19 @@ def Login():
         Pass = Pass.join(Pass.splitlines())
         Pass = hashlib.sha256(Pass.encode()).hexdigest()
         
-
+    
         with open('Login.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
                 Username, Password = row[0], row[1]
-                print(row[0], row[1])
-                print(User, Username, Pass, Password)
                 if Username == User and Password == Pass:
                     top.withdraw()
                     JokeProgram()
                     return
-                else:
-                    print('WTH HAPPENED')
-                    
+                
+        LoginSuccess = tk.Label(top, text="Error - Username or Password Incorrect", fg="Red").place(x=0, y=0)
+
+                                    
 
     def CreateAccount(Username, Password):
         global Login_df
@@ -314,7 +319,23 @@ def Login():
         Login_df.loc[len(Login_df)] = NewLogin
 
         Login_df = Login_df.reset_index(drop=True)
-        Login_df.to_csv(path_or_buf='Login.csv', index=False)        
+        Login_df.to_csv(path_or_buf='Login.csv', index=False)   
+
+        UsernameCreateInput.delete(0, tk.END)
+        PasswordCreateInput.delete(0, tk.END)
+
+def SaveUpdatesTop():
+    global JokeWindow, Joke_df, Username
+    try:
+        JokeWindow.destroy()
+    except:
+        pass
+    try:
+        top.destroy()
+    except:
+        pass
+    
+top.protocol('WM_DELETE_WINDOW', SaveUpdatesTop) # call function() when window is closed
 
 Login()
     
