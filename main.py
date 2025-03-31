@@ -77,7 +77,7 @@ def JokeProgram():
     JokeDisplayPunchline = tk.Label(frame1, text="")
 
     try:
-        with open(f'Users\{Username}\filekey.key', 'rb') as filekey:
+        with open(f'Keys\{Username}.key', 'rb') as filekey:
             key = filekey.read()
             
         # using the key
@@ -249,16 +249,25 @@ def JokeProgram():
         try:
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
         except:
-            os.mkdir(f'Users\{Username}')
+            Userfolder = f"Users"  # This is the folder where keys will be stored
+            file_path_user = os.path.join(Userfolder, f"{Username}")
+            os.makedirs(file_path_user, exist_ok=True)
+
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
-            
+        
+        directory = "Keys"  # This is the folder where keys will be stored
+        file_path = os.path.join(directory, f"{Username}.key")  # Define the actual key file
+
+            # Ensure the directory exists before saving the key
+        os.makedirs(directory, exist_ok=True)  # Creates 'Keys' folder if it doesn't exist
+
         # opening the key
-        with open(f'Users\{Username}\filekey.key', 'rb') as filekey:
+        with open(file_path, 'rb') as filekey:
             key = filekey.read()
         
         # using the generated key
         fernet = Fernet(key)
-        
+
         # opening the original file to encrypt
         with open(f'Users\{Username}\Collections.csv', 'rb') as file:
             original = file.read()
@@ -357,12 +366,17 @@ def Login():
             Pass = Pass.join(Pass.splitlines())
             Pass = hashlib.sha256(Pass.encode()).hexdigest()
         else:
-            os.mkdir(f'Users\{User}')
+            directory = "Keys"  # This is the folder where keys will be stored
+            file_path = os.path.join(directory, f"{User}.key")  # Define the actual key file
+
+            # Ensure the directory exists before saving the key
+            os.makedirs(directory, exist_ok=True)  # Creates 'Keys' folder if it doesn't exist
+
+            # Generate an encryption key
             key = Fernet.generate_key()
- 
-            # string the key in a file
-            #location = ().replace("/","\ ").replace(" ","")
-            with open(f'C:\\Users\\{User}\\filekey.key', 'wb') as filekey:
+
+            # Write the key to a file
+            with open(file_path, 'wb') as filekey:
                 filekey.write(key)
         
         with open('Login.csv', mode='r') as file:
@@ -383,13 +397,7 @@ def Login():
         Username = Username.join(Username.splitlines())
         Password = Password.join(Password.splitlines())
         Password = hashlib.sha256(Password.encode()).hexdigest()
-        '''
-        key = Fernet.generate_key()
- 
-        # string the key in a file
-        with open('filekey.key', 'wb') as filekey:
-        filekey.write(key)
-        '''
+
         NewLogin = {
         "Username": Username, 
         "Password": Password, 
