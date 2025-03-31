@@ -8,13 +8,41 @@ from tkinter import ttk
 import hashlib
 import csv
 import os
+from cryptography.fernet import Fernet
+
 
 #--- Setup Collections ---
 Login_df = pd.read_csv('Login.csv')
 
 top = Tk()
+'''
+#--- Encryption -----------------------------------------------------------------------
+key = Fernet.generate_key()
+ 
+# string the key in a file
+with open('filekey.key', 'wb') as filekey:
+   filekey.write(key)
 
+with open('filekey.key', 'rb') as filekey:
+    key = filekey.read()
+ 
+# using the generated key
+fernet = Fernet(key)
+ 
+# opening the original file to encrypt
+with open('nba.csv', 'rb') as file:
+    original = file.read()
+     
+# encrypting the file
+encrypted = fernet.encrypt(original)
+ 
+# opening the file in write mode and 
+# writing the encrypted data
+with open('nba.csv', 'wb') as encrypted_file:
+    encrypted_file.write(encrypted)
 
+#--------------------------------------------------------------------------------------
+'''
 def JokeProgram():
     global JokeWindow, Joke_df
     JokeWindow = Tk()
@@ -243,7 +271,7 @@ def Login():
     
     Login = tk.Button(top, 
                 text="Login", 
-                command=lambda: [Account(UsernameInput.get().strip(), PasswordInput.get().strip())], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
+                command=lambda: [Account(UsernameInput.get().strip(), PasswordInput.get().strip(), False)], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
                 anchor="center",
                 bd=3,
                 cursor="hand2",
@@ -285,13 +313,15 @@ def Login():
                 bg="#3bccaa").place(x=50, y=300)
     
     
-    def Account(User, Pass):
+    def Account(User, Pass, Logedin):
         global Username
-        User = User.join(User.splitlines())
-        Pass = Pass.join(Pass.splitlines())
-        Pass = hashlib.sha256(Pass.encode()).hexdigest()
+        if Logedin == False:
+            User = User.join(User.splitlines())
+            Pass = Pass.join(Pass.splitlines())
+            Pass = hashlib.sha256(Pass.encode()).hexdigest()
+        else:
+            pass
         
-    
         with open('Login.csv', mode='r') as file:
             reader = csv.reader(file)
             for row in reader:
@@ -320,6 +350,8 @@ def Login():
 
         Login_df = Login_df.reset_index(drop=True)
         Login_df.to_csv(path_or_buf='Login.csv', index=False)   
+
+        Account(Username, Password, True)
 
         UsernameCreateInput.delete(0, tk.END)
         PasswordCreateInput.delete(0, tk.END)
