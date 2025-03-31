@@ -65,7 +65,6 @@ def JokeProgram():
     frame3.pack(fill='both', expand=True)
     frame4.pack(fill='both', expand=True)
 
-
     #--- Notebook ---
     notebook.add(frame1, text='Joke Curation')
     notebook.add(frame2, text='Collections')
@@ -326,22 +325,23 @@ def Login():
                 height=1,
                 justify="center",
                 pady=5,
-                width=5,
+                width=15,
                 wraplength=300,
                 bg="#3bccaa").place(x=50, y=150)
     
-    UsernameCreate = tk.Label(top, text="Username:").place(x=50, y=200)
-    PasswordCreate = tk.Label(top, text="Password:").place(x=50, y=250)
+    CreateAccountTxt = tk.Label(top, text="Create Account:").place(x=25, y=225)
+    UsernameCreate = tk.Label(top, text="Username:").place(x=50, y=250)
+    PasswordCreate = tk.Label(top, text="Password:").place(x=50, y=300)
 
     UsernameCreateInput = tk.Entry(top,
                 width = 20
                 )
-    UsernameCreateInput.place(x=150, y=200) 
+    UsernameCreateInput.place(x=150, y=250) 
     
     PasswordCreateInput = tk.Entry(top,
                 width = 20
                 )
-    PasswordCreateInput.place(x=150, y=250)
+    PasswordCreateInput.place(x=150, y=300)
     
     Login = tk.Button(top, 
                 text="Create Account", 
@@ -354,9 +354,9 @@ def Login():
                 height=1,
                 justify="center",
                 pady=5,
-                width=5,
+                width=15,
                 wraplength=300,
-                bg="#3bccaa").place(x=50, y=300)
+                bg="#3bccaa").place(x=50, y=350)
     
     
     def Account(User, Pass, Logedin):
@@ -389,29 +389,45 @@ def Login():
                     return
                 
         LoginSuccess = tk.Label(top, text="Error - Username or Password Incorrect", fg="Red").place(x=0, y=0)
+        UsernameInput.delete(0, tk.END)
+        PasswordInput.delete(0, tk.END)
 
                                     
 
     def CreateAccount(Username, Password):
         global Login_df
+        
         Username = Username.join(Username.splitlines())
         Password = Password.join(Password.splitlines())
         Password = hashlib.sha256(Password.encode()).hexdigest()
 
-        NewLogin = {
-        "Username": Username, 
-        "Password": Password, 
-        }
+        with open('Login.csv', mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                User = row[0]
+                if User == Username:
+                    UsernameTaken = True
+                    UsernameCreateInput.delete(0, tk.END)
+                    PasswordCreateInput.delete(0, tk.END)
+                    break
+        if UsernameTaken == False:
+            NewLogin = {
+            "Username": Username, 
+            "Password": Password, 
+            }
 
-        Login_df.loc[len(Login_df)] = NewLogin
+            Login_df.loc[len(Login_df)] = NewLogin
 
-        Login_df = Login_df.reset_index(drop=True)
-        Login_df.to_csv(path_or_buf='Login.csv', index=False)   
+            Login_df = Login_df.reset_index(drop=True)
+            Login_df.to_csv(path_or_buf='Login.csv', index=False)   
 
-        Account(Username, Password, True)
+            Account(Username, Password, True)
 
-        UsernameCreateInput.delete(0, tk.END)
-        PasswordCreateInput.delete(0, tk.END)
+            UsernameCreateInput.delete(0, tk.END)
+            PasswordCreateInput.delete(0, tk.END)
+
+        else:
+            LoginSuccess = tk.Label(top, text="Error - Username Taken", fg="Red").place(x=0, y=0)
 
 def SaveUpdatesTop():
     global JokeWindow, Joke_df, Username
