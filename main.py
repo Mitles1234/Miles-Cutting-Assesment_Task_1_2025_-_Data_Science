@@ -77,6 +77,24 @@ def JokeProgram():
     JokeDisplayPunchline = tk.Label(frame1, text="")
 
     try:
+        with open(f'Users\{Username}\filekey.key', 'rb') as filekey:
+            key = filekey.read()
+            
+        # using the key
+        fernet = Fernet(key)
+        
+        # opening the encrypted file
+        with open(f'Users\{Username}\Collections.csv', 'rb') as enc_file:
+            encrypted = enc_file.read()
+        
+        # decrypting the file
+        decrypted = fernet.decrypt(encrypted)
+        
+        # opening the file in write mode and
+        # writing the decrypted data
+        with open(f'Users\{Username}\Collections.csv', 'wb') as dec_file:
+            dec_file.write(decrypted)
+            
         Joke_df = pd.read_csv(f'Users\{Username}\Collections.csv')
     except: 
         Joke_df = pd.read_csv(f'Collections_Default.csv')
@@ -233,7 +251,26 @@ def JokeProgram():
         except:
             os.mkdir(f'Users\{Username}')
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
-
+            
+        # opening the key
+        with open(f'Users\{Username}\filekey.key', 'rb') as filekey:
+            key = filekey.read()
+        
+        # using the generated key
+        fernet = Fernet(key)
+        
+        # opening the original file to encrypt
+        with open(f'Users\{Username}\Collections.csv', 'rb') as file:
+            original = file.read()
+            
+        # encrypting the file
+        encrypted = fernet.encrypt(original)
+        
+        # opening the file in write mode and 
+        # writing the encrypted data
+        with open(f'Users\{Username}\Collections.csv', 'wb') as encrypted_file:
+            encrypted_file.write(encrypted)
+            
         try:
             JokeWindow.destroy()
         except:
@@ -320,7 +357,13 @@ def Login():
             Pass = Pass.join(Pass.splitlines())
             Pass = hashlib.sha256(Pass.encode()).hexdigest()
         else:
-            pass
+            os.mkdir(f'Users\{User}')
+            key = Fernet.generate_key()
+ 
+            # string the key in a file
+            #location = ().replace("/","\ ").replace(" ","")
+            with open(f'C:\\Users\\{User}\\filekey.key', 'wb') as filekey:
+                filekey.write(key)
         
         with open('Login.csv', mode='r') as file:
             reader = csv.reader(file)
@@ -340,7 +383,13 @@ def Login():
         Username = Username.join(Username.splitlines())
         Password = Password.join(Password.splitlines())
         Password = hashlib.sha256(Password.encode()).hexdigest()
-
+        '''
+        key = Fernet.generate_key()
+ 
+        # string the key in a file
+        with open('filekey.key', 'wb') as filekey:
+        filekey.write(key)
+        '''
         NewLogin = {
         "Username": Username, 
         "Password": Password, 
