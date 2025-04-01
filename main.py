@@ -9,40 +9,14 @@ import hashlib
 import csv
 import os
 from cryptography.fernet import Fernet
+#import customtkinter as ctk
 
 
 #--- Setup Collections ---
 Login_df = pd.read_csv('Login.csv')
 
 top = Tk()
-'''
-#--- Encryption -----------------------------------------------------------------------
-key = Fernet.generate_key()
- 
-# string the key in a file
-with open('filekey.key', 'wb') as filekey:
-   filekey.write(key)
 
-with open('filekey.key', 'rb') as filekey:
-    key = filekey.read()
- 
-# using the generated key
-fernet = Fernet(key)
- 
-# opening the original file to encrypt
-with open('nba.csv', 'rb') as file:
-    original = file.read()
-     
-# encrypting the file
-encrypted = fernet.encrypt(original)
- 
-# opening the file in write mode and 
-# writing the encrypted data
-with open('nba.csv', 'wb') as encrypted_file:
-    encrypted_file.write(encrypted)
-
-#--------------------------------------------------------------------------------------
-'''
 def JokeProgram():
     global JokeWindow, Joke_df
     JokeWindow = Tk()
@@ -295,68 +269,68 @@ def JokeProgram():
     Login()
 
 def Login():
-    global Username, Password, Login
-    top.geometry('600x400')
-    top.title('A Funny App Login')
-    top.iconbitmap('OtherFiles/AppIcon.ico')
+    global Username, Password, UsernameInput, PasswordInput
+    
+    #--- Setup for Window ---
+    top.geometry('600x400') # Size of Window
+    top.title('A Funny App Login') # Name of Windows
+    top.iconbitmap('OtherFiles/AppIcon.ico') # App icon of Window
 
-    LoginTxt = tk.Label(top, text="Login:").place(x=25, y=25)
-    UsernameLabel = tk.Label(top, text="Username:").place(x=50, y=50)
-    PasswordLabel = tk.Label(top, text="Password:").place(x=50, y=100)
+    HidePassword = tk.BooleanVar(value=False) # Sets the Hide Password 'tKinter Integer' to False
 
-    UsernameInput = tk.Entry(top,
-                width = 20
-                )
-    UsernameInput.place(x=150, y=50) 
-    
-    PasswordInput = tk.Entry(top,
-                width = 20
-                )
-    PasswordInput.place(x=150, y=100)
-    
-    Login = tk.Button(top, 
-                text="Login", 
-                command=lambda: [Account(UsernameInput.get().strip(), PasswordInput.get().strip(), False)], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
-                anchor="center",
-                bd=3,
-                cursor="hand2",
-                fg="black",
-                font=("Arial", 12),
-                height=1,
-                justify="center",
-                pady=5,
-                width=15,
-                wraplength=300,
-                bg="#3bccaa").place(x=50, y=150)
-    
-    CreateAccountTxt = tk.Label(top, text="Create Account:").place(x=25, y=225)
-    UsernameCreate = tk.Label(top, text="Username:").place(x=50, y=250)
-    PasswordCreate = tk.Label(top, text="Password:").place(x=50, y=300)
+    def PasswordHidder():
+        if HidePassword.get():
+            PasswordInput.config(show='*')
+            PasswordCreateInput.config(show='*')
+        else:
+            PasswordInput.config(show='')
+            PasswordCreateInput.config(show='')
 
-    UsernameCreateInput = tk.Entry(top,
-                width = 20
-                )
-    UsernameCreateInput.place(x=150, y=250) 
-    
-    PasswordCreateInput = tk.Entry(top,
-                width = 20
-                )
-    PasswordCreateInput.place(x=150, y=300)
-    
-    Login = tk.Button(top, 
-                text="Create Account", 
-                command=lambda: [CreateAccount(UsernameCreateInput.get().strip(), PasswordCreateInput.get().strip())], #hash_value = calculate_sha256(input_data) converts to sha256, store that, then check the password is stored like that
-                anchor="center",
-                bd=3,
-                cursor="hand2",
-                fg="black",
-                font=("Arial", 12),
-                height=1,
-                justify="center",
-                pady=5,
-                width=15,
-                wraplength=300,
-                bg="#3bccaa").place(x=50, y=350)
+    # --- Login Section ---
+    tk.Label(top, text="Login", font=("Arial", 12, "bold")).pack(pady=(10, 5))
+
+    UsernameInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
+    UsernameInput.insert(0, "Username")
+    UsernameInput.bind("<FocusIn>", lambda e: UsernameInput.delete(0, tk.END) if UsernameInput.get() == "Username" else None)
+    UsernameInput.bind("<FocusOut>", lambda e: UsernameInput.insert(0, "Username") if UsernameInput.get() == "" else None)
+    UsernameInput.pack(pady=2)
+
+    PasswordInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center", show="*")
+    PasswordInput.insert(0, "Password")
+    PasswordInput.bind("<FocusIn>", lambda e: (PasswordInput.delete(0, tk.END), PasswordInput.config(fg="black", show="")) if PasswordInput.get() == "Password" else None)
+    PasswordInput.bind("<FocusOut>", lambda e: (PasswordInput.insert(0, "Password"), PasswordInput.config(fg="grey", show="*")) if PasswordInput.get() == "" else None)
+    PasswordInput.pack(pady=2)
+
+    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder)
+    ShowPassword.pack(pady=2)
+
+    LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
+    LoginButton.pack(pady=10)
+
+    tk.Label(top, text="---------------------------").pack(pady=5)
+
+    # --- Create Account Section ---
+    tk.Label(top, text="Create Account", font=("Arial", 12, "bold")).pack(pady=(5, 5))
+
+    UsernameCreateInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
+    UsernameCreateInput.insert(0, "Create Username")
+    UsernameCreateInput.bind("<FocusIn>", lambda e: UsernameCreateInput.delete(0, tk.END) if UsernameCreateInput.get() == "Create Username" else None)
+    UsernameCreateInput.bind("<FocusOut>", lambda e: UsernameCreateInput.insert(0, "Create Username") if UsernameCreateInput.get() == "" else None)
+    UsernameCreateInput.pack(pady=2)
+
+    PasswordCreateInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center", show="*")
+    PasswordCreateInput.insert(0, "Create Password")
+    PasswordCreateInput.bind("<FocusIn>", lambda e: (PasswordCreateInput.delete(0, tk.END), PasswordCreateInput.config(fg="black", show="")) if PasswordCreateInput.get() == "Create Password" else None)
+    PasswordCreateInput.bind("<FocusOut>", lambda e: (PasswordCreateInput.insert(0, "Create Password"), PasswordCreateInput.config(fg="grey", show="*")) if PasswordCreateInput.get() == "" else None)
+    PasswordCreateInput.pack(pady=2)
+
+    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder)
+    ShowPasswordSignUp.pack(pady=2)
+
+    CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameCreateInput.get(), PasswordInput.get(), True)])
+    CreateAccountButton.pack(pady=10)
+
+
     
     
     def Account(User, Pass, Logedin):
@@ -410,6 +384,8 @@ def Login():
                     UsernameCreateInput.delete(0, tk.END)
                     PasswordCreateInput.delete(0, tk.END)
                     break
+                else:
+                    UsernameTaken = False
         if UsernameTaken == False:
             NewLogin = {
             "Username": Username, 
