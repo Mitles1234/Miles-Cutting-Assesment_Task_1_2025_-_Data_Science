@@ -9,6 +9,7 @@ import hashlib
 import csv
 import os
 from cryptography.fernet import Fernet
+from tkinter import font
 #import customtkinter as ctk
 
 
@@ -16,10 +17,13 @@ from cryptography.fernet import Fernet
 Login_df = pd.read_csv('Login.csv')
 
 top = Tk()
+top['bg'] = "#32a2a8"
 
 def JokeProgram():
     global JokeWindow, Joke_df
     JokeWindow = Tk()
+    BackgroundColour = "#32a2a8"
+    #JokeWindow['bg'] = BackgroundColour
     #------ GUI Setup ------
     JokeWindow.geometry('600x400')
     JokeWindow.title('A Funny App')
@@ -29,16 +33,16 @@ def JokeProgram():
     notebook.pack(pady=15, expand=True)
 
     #--- Frames ---
-    frame1 = ttk.Frame(notebook, width=1920, height=1080)
-    frame2 = ttk.Frame(notebook, width=1920, height=1080)
-    frame3 = ttk.Frame(notebook, width=1920, height=1080)
-    frame4 = ttk.Frame(notebook, width=1920, height=1080)
+    frame1 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
+    frame2 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
+    frame3 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
+    frame4 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
 
     frame1.pack(fill='both', expand=True)
     frame2.pack(fill='both', expand=True)
     frame3.pack(fill='both', expand=True)
     frame4.pack(fill='both', expand=True)
-
+    
     #--- Notebook ---
     notebook.add(frame1, text='Joke Curation')
     notebook.add(frame2, text='Collections')
@@ -91,25 +95,10 @@ def JokeProgram():
                 JokeDisplaySetup.config(text = f'Error 404 - API Not Responding')
                 JokeDisplayPunchline.config(text = f'Please use the Non-API Functions')
 
-            JokeDisplaySetup.place(x=10, y=50)
-            JokeDisplayPunchline.place(x=10, y=100)
+            JokeDisplaySetup.pack(pady=2)
+            JokeDisplayPunchline.pack(pady=2)
             
         DisplayJokes()
-        
-        DiscardJoke = tk.Button(frame1, 
-                    text="👎 Discard Joke", 
-                    command=lambda: [DisplayJokes()],
-                    anchor="center",
-                    bd=3,
-                    cursor="hand2",
-                    fg="black",
-                    font=("Arial", 12),
-                    height=2,
-                    justify="center",
-                    pady=5,
-                    width=15,
-                    wraplength=300)
-        DiscardJoke.place(x=300, y=300)
         
         StoreJoke = tk.Button(frame1, 
                     text="👍 Store Joke", 
@@ -119,12 +108,29 @@ def JokeProgram():
                     cursor="hand2",
                     fg="black",
                     font=("Arial", 12),
-                    height=2,
+                    height=1,
                     justify="center",
                     pady=5,
                     width=15,
                     wraplength=300)
-        StoreJoke.place(x=50, y=300)
+        StoreJoke.pack(side=LEFT)
+        
+        DiscardJoke = tk.Button(frame1, 
+                    text="👎 Discard Joke", 
+                    command=lambda: [DisplayJokes()],
+                    anchor="center",
+                    bd=3,
+                    cursor="hand2",
+                    fg="black",
+                    font=("Arial", 12),
+                    height=1,
+                    justify="center",
+                    pady=5,
+                    width=15,
+                    wraplength=300)
+        DiscardJoke.pack(side=LEFT)#,anchor='ne')
+        
+        
 
         def Addrow():
             AddJoke = tk.Button(frame2, 
@@ -287,7 +293,7 @@ def Login():
             PasswordCreateInput.config(show='')
 
     # --- Login Section ---
-    tk.Label(top, text="Login", font=("Arial", 12, "bold")).pack(pady=(10, 5))
+    tk.Label(top, text="Login", font=("Ariel", 14, "bold"), fg='white', bg="#32a2a8").pack(pady=(10, 5))
 
     UsernameInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
     UsernameInput.insert(0, "Username")
@@ -301,16 +307,16 @@ def Login():
     PasswordInput.bind("<FocusOut>", lambda e: (PasswordInput.insert(0, "Password"), PasswordInput.config(fg="grey", show="*")) if PasswordInput.get() == "" else None)
     PasswordInput.pack(pady=2)
 
-    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder)
+    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg="#32a2a8")
     ShowPassword.pack(pady=2)
 
     LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
     LoginButton.pack(pady=10)
 
-    tk.Label(top, text="---------------------------").pack(pady=5)
+    tk.Label(top, text="---------------------------", bg="#32a2a8").pack(pady=5)
 
     # --- Create Account Section ---
-    tk.Label(top, text="Create Account", font=("Arial", 12, "bold")).pack(pady=(5, 5))
+    tk.Label(top, text="Create Account", font=("Arial", 14, "bold"), fg='white', bg="#32a2a8").pack(pady=(5, 5))
 
     UsernameCreateInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
     UsernameCreateInput.insert(0, "Create Username")
@@ -324,7 +330,7 @@ def Login():
     PasswordCreateInput.bind("<FocusOut>", lambda e: (PasswordCreateInput.insert(0, "Create Password"), PasswordCreateInput.config(fg="grey", show="*")) if PasswordCreateInput.get() == "" else None)
     PasswordCreateInput.pack(pady=2)
 
-    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder)
+    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg="#32a2a8")
     ShowPasswordSignUp.pack(pady=2)
 
     CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameCreateInput.get(), PasswordInput.get(), True)])
