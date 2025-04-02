@@ -34,7 +34,7 @@ def JokeProgram():
 
     #--- Frames ---
     frame1 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
-    frame2 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
+    frame2 = Frame(notebook, width=1920, height=1080)
     frame3 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
     frame4 = Frame(notebook, width=1920, height=1080, bg=BackgroundColour)
 
@@ -50,8 +50,8 @@ def JokeProgram():
     notebook.add(frame4, text='Account')
 
 
-    JokeDisplaySetup = tk.Label(frame1, text="")
-    JokeDisplayPunchline = tk.Label(frame1, text="")
+    JokeDisplaySetup = tk.Label(frame1, text="", font=("Ariel", 10, "bold"), fg='white', bg=BackgroundColour)
+    JokeDisplayPunchline = tk.Label(frame1, text="", font=("Ariel", 10, "bold"), fg='white', bg=BackgroundColour)
 
     try:
         with open(f'Keys\{Username}.key', 'rb') as filekey:
@@ -77,12 +77,15 @@ def JokeProgram():
         Joke_df = pd.read_csv(f'Collections_Default.csv')
 
     #--- Setup for Table ---
-    pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=True, enable_menus=False)
+    pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
     pt.show()
 
 
     def JokeCuration():
-        global JokeAPI, Addrow, Removerow
+        global JokeAPI, Removerow
+
+        Joke = tk.Label(frame1, text="Joke:", font=("Ariel", 14, "bold"), fg='white', bg=BackgroundColour).pack(pady=5)
+
         def DisplayJokes():
             global JokeAPI 
             
@@ -99,10 +102,13 @@ def JokeProgram():
             JokeDisplayPunchline.pack(pady=2)
             
         DisplayJokes()
+
+        ButtonFrame = tk.Frame(frame1, bg=BackgroundColour)
+        ButtonFrame.pack(pady=10, anchor="center")
         
-        StoreJoke = tk.Button(frame1, 
+        StoreJoke = tk.Button(ButtonFrame, 
                     text="👍 Store Joke", 
-                    command=lambda: [Collections(JokeAPI.json()['setup'], JokeAPI.json()['punchline']), DisplayJokes(), Addrow(), Removerow()],
+                    command=lambda: [Collections(JokeAPI.json()['setup'], JokeAPI.json()['punchline']), DisplayJokes(), Removerow()],
                     anchor="center",
                     bd=3,
                     cursor="hand2",
@@ -113,9 +119,9 @@ def JokeProgram():
                     pady=5,
                     width=15,
                     wraplength=300)
-        StoreJoke.pack(side=LEFT)
+        StoreJoke.pack(side=tk.LEFT, padx=10, expand=True)
         
-        DiscardJoke = tk.Button(frame1, 
+        DiscardJoke = tk.Button(ButtonFrame, 
                     text="👎 Discard Joke", 
                     command=lambda: [DisplayJokes()],
                     anchor="center",
@@ -128,39 +134,79 @@ def JokeProgram():
                     pady=5,
                     width=15,
                     wraplength=300)
-        DiscardJoke.pack(side=LEFT)#,anchor='ne')
+        DiscardJoke.pack(side=tk.LEFT, padx=10, expand=True)
         
-        
+        tk.Label(frame1, text="---------------------------", bg="#32a2a8").pack(pady=5)
 
-        def Addrow():
-            AddJoke = tk.Button(frame2, 
-                        text="+ Row", 
-                        command=lambda: [Collections('', ''), Addrow(), Removerow()],
-                        anchor="center",
-                        bd=3,
-                        cursor="hand2",
-                        fg="black",
-                        font=("Arial", 12),
-                        height=1,
-                        justify="center",
-                        pady=5,
-                        width=5,
-                        wraplength=300,
-                        bg="#3bccaa")
-            AddJoke.place(x=1470, y=690)
+        Collection = tk.Label(frame1, text="Collection:", font=("Ariel", 14, "bold"), fg='white', bg=BackgroundColour).pack(pady=5)
+
+        CollectionDisplaySetup = tk.Label(frame1, text="", font=("Ariel", 10, "bold"), fg='white', bg=BackgroundColour)
+        CollectionDisplayPunchline = tk.Label(frame1, text="", font=("Ariel", 10, "bold"), fg='white', bg=BackgroundColour)
+
+        CollectionDisplaySetup.pack(pady=2)
+        CollectionDisplayPunchline.pack(pady=2)
+
+        def RandomCollectionJoke():
+            global Collection
+            try:
+                CollectionJoke_df.iloc[:0]
+            except:
+                pass
+            CollectionJoke_df = Joke_df.sample(n=1)
+
+            CollectionDisplaySetup.config(text=CollectionJoke_df.iloc[0,0])
+            CollectionDisplayPunchline.config(text=CollectionJoke_df.iloc[0,1])
+
+            CollectionDisplaySetup.pack(pady=2)
+            CollectionDisplayPunchline.pack(pady=2)
+
+        CollectionJoke = tk.Button(frame1, 
+            text="Get Collection Joke", 
+            command=lambda: [RandomCollectionJoke()],
+            anchor="center",
+            bd=3,
+            cursor="hand2",
+            fg="black",
+            font=("Arial", 12),
+            height=1,
+            justify="center",
+            pady=2,
+            width=25,
+            wraplength=300)
+        CollectionJoke.pack(pady=10)
+
+        tk.Label(frame1, text="---------------------------", bg="#32a2a8").pack(pady=5)
+
+        ManualJoke = tk.Label(frame1, text="Add Joke:", font=("Ariel", 14, "bold"), fg='white', bg=BackgroundColour).pack(pady=5)
+
+        SetupInput = tk.Entry(frame1, width=40, fg="grey", font=("Arial", 10, "italic"), justify="center")
+        SetupInput.insert(0, "Setup")
+        SetupInput.bind("<FocusIn>", lambda e: SetupInput.delete(0, tk.END) and SetupInput.config(fg="black") if SetupInput.get() == "Setup" else SetupInput.config(fg="grey"))
+        SetupInput.bind("<FocusOut>", lambda e: SetupInput.insert(0, "Setup") and SetupInput.config(fg="grey") if SetupInput.get() == "" else SetupInput.config(fg="black"))
+        SetupInput.bind("<KeyRelease>", lambda e: SetupInput.config(fg="black") if SetupInput.get() != "Setup" else SetupInput.config(fg="grey"))
+        SetupInput.pack(pady=2)
+
+        PunchlineInput = tk.Entry(frame1, width=40, fg="grey", font=("Arial", 10, "italic"), justify="center")
+        PunchlineInput.insert(0, "Punchline")
+        PunchlineInput.bind("<FocusIn>", lambda e: PunchlineInput.delete(0, tk.END) and PunchlineInput.config(fg="black") if PunchlineInput.get() == "Punchline" else PunchlineInput.config(fg="grey"))
+        PunchlineInput.bind("<FocusOut>", lambda e: PunchlineInput.insert(0, "Punchline") and PunchlineInput.config(fg="grey") if PunchlineInput.get() == "" else PunchlineInput.config(fg="black"))
+        PunchlineInput.bind("<KeyRelease>", lambda e: PunchlineInput.config(fg="black") if PunchlineInput.get() != "Punchline" else PunchlineInput.config(fg="grey"))
+        PunchlineInput.pack(pady=2)
+
+        LoginButton = tk.Button(frame1, text="Add Joke", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(SetupInput.get(), PunchlineInput.get())])
+        LoginButton.pack(pady=2)
 
         def Removerow():
-            inputtxt = tk.Text(frame2, 
+            RemoveRow = tk.Text(frame2, 
                         height = 1, 
                         width = 5) 
         
-            inputtxt.place(x=1470, y=600) 
+            RemoveRow.place(x=50, y=50, anchor='sw')
 
-            
 
             RemoveJoke = tk.Button(frame2, 
                         text="- Row", 
-                        command=lambda: [Drop_Row(), Removerow(), Addrow()],
+                        command=lambda: [Drop_Row(), Removerow()],
                         anchor="center",
                         bd=3,
                         cursor="hand2",
@@ -172,7 +218,7 @@ def JokeProgram():
                         width=5,
                         wraplength=300,
                         bg="#3bccaa")
-            RemoveJoke.place(x=1470, y=640)
+            RemoveJoke.place(x=110, y=50, anchor='sw')
 
             def Drop_Row():
                 global Joke_df
@@ -181,7 +227,7 @@ def JokeProgram():
                 except:
                     pass
                 try:
-                    Joke_df = Joke_df.drop(index=(int(inputtxt.get('1.0', 'end')) - 1)).reset_index(drop=True)
+                    Joke_df = Joke_df.drop(index=(int(Removerow.get('1.0', 'end')) - 1)).reset_index(drop=True)
                     try:
                         pt.destroy()
                     except:
@@ -191,8 +237,6 @@ def JokeProgram():
                 except:
                     RowNotFound = tk.Label(frame2, text="Error - Row Not Found - Please Try Again", fg="Red").place(x=0, y=0)
                 
-
-        Addrow()
         Removerow()
         
 
@@ -219,8 +263,9 @@ def JokeProgram():
         except:
             pass
         
-        pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=True, enable_menus=False)
+        pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
         pt.show()
+        Removerow()
         
 
     def SaveUpdates():
@@ -278,11 +323,13 @@ def Login():
     global Username, Password, UsernameInput, PasswordInput
     
     #--- Setup for Window ---
-    top.geometry('600x400') # Size of Window
+    top.geometry('250x400') # Size of Window
     top.title('A Funny App Login') # Name of Windows
     top.iconbitmap('OtherFiles/AppIcon.ico') # App icon of Window
 
     HidePassword = tk.BooleanVar(value=False) # Sets the Hide Password 'tKinter Integer' to False
+
+    
 
     def PasswordHidder():
         if HidePassword.get():
@@ -295,10 +342,14 @@ def Login():
     # --- Login Section ---
     tk.Label(top, text="Login", font=("Ariel", 14, "bold"), fg='white', bg="#32a2a8").pack(pady=(10, 5))
 
+    ErrorMessage = tk.Label(top, text='', fg="red", bg="#32a2a8", font=("Arial", 10,))
+    ErrorMessage.place(x=0,y=0)
+
     UsernameInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
     UsernameInput.insert(0, "Username")
-    UsernameInput.bind("<FocusIn>", lambda e: UsernameInput.delete(0, tk.END) if UsernameInput.get() == "Username" else None)
-    UsernameInput.bind("<FocusOut>", lambda e: UsernameInput.insert(0, "Username") if UsernameInput.get() == "" else None)
+    UsernameInput.bind("<FocusIn>", lambda e: UsernameInput.delete(0, tk.END) and UsernameInput.config(fg="black") if UsernameInput.get() == "Username" else UsernameInput.config(fg="grey"))
+    UsernameInput.bind("<FocusOut>", lambda e: UsernameInput.insert(0, "Setup") and UsernameInput.config(fg="grey") if UsernameInput.get() == "" else UsernameInput.config(fg="black"))
+    UsernameInput.bind("<KeyRelease>", lambda e: UsernameInput.config(fg="black") if UsernameInput.get() != "Username" else UsernameInput.config(fg="grey"))
     UsernameInput.pack(pady=2)
 
     PasswordInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center", show="*")
@@ -311,7 +362,7 @@ def Login():
     ShowPassword.pack(pady=2)
 
     LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
-    LoginButton.pack(pady=10)
+    LoginButton.pack(pady=2)
 
     tk.Label(top, text="---------------------------", bg="#32a2a8").pack(pady=5)
 
@@ -333,10 +384,8 @@ def Login():
     ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg="#32a2a8")
     ShowPasswordSignUp.pack(pady=2)
 
-    CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameCreateInput.get(), PasswordInput.get(), True)])
-    CreateAccountButton.pack(pady=10)
-
-
+    CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [CreateAccount(UsernameCreateInput.get(), PasswordCreateInput.get())])
+    CreateAccountButton.pack(pady=2)
     
     
     def Account(User, Pass, Logedin):
@@ -368,7 +417,7 @@ def Login():
                     JokeProgram()
                     return
                 
-        LoginSuccess = tk.Label(top, text="Error - Username or Password Incorrect", fg="Red").place(x=0, y=0)
+        ErrorMessage.config(text='Error - Username or Password Incorrect')
         UsernameInput.delete(0, tk.END)
         PasswordInput.delete(0, tk.END)
 
@@ -409,7 +458,7 @@ def Login():
             PasswordCreateInput.delete(0, tk.END)
 
         else:
-            LoginSuccess = tk.Label(top, text="Error - Username Taken", fg="Red").place(x=0, y=0)
+            ErrorMessage.config(text='Error - Username Taken')
 
 def SaveUpdatesTop():
     global JokeWindow, Joke_df, Username
