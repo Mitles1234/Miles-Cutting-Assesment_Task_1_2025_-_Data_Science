@@ -12,22 +12,31 @@ from cryptography.fernet import Fernet
 from tkinter import font
 #import customtkinter as ctk
 
+#--- Colours ---
+BgColour = "#32a2a8"
+AccentColour1 = "#3bccaa"
 
 #--- Setup Collections ---
 Login_df = pd.read_csv('Login.csv')
 
 top = Tk()
-top['bg'] = "#32a2a8"
+top['bg'] = BgColour
 
 def JokeProgram():
     global JokeWindow, Joke_df
     JokeWindow = Tk()
-    BackgroundColour = "#32a2a8"
-    #JokeWindow['bg'] = BackgroundColour
+
+    
+
+    BackgroundColour = BgColour
+    JokeWindow['bg'] = BackgroundColour
+
     #------ GUI Setup ------
     JokeWindow.geometry('600x400')
     JokeWindow.title('A Funny App')
     JokeWindow.iconbitmap('OtherFiles/AppIcon.ico')
+
+    JokeWindow.attributes('-fullscreen',True)
     
     notebook = ttk.Notebook(JokeWindow)
     notebook.pack(pady=15, expand=True)
@@ -136,7 +145,7 @@ def JokeProgram():
                     wraplength=300)
         DiscardJoke.pack(side=tk.LEFT, padx=10, expand=True)
         
-        tk.Label(frame1, text="---------------------------", bg="#32a2a8").pack(pady=5)
+        tk.Label(frame1, text="---------------------------", bg=BgColour).pack(pady=5)
 
         Collection = tk.Label(frame1, text="Collection:", font=("Ariel", 14, "bold"), fg='white', bg=BackgroundColour).pack(pady=5)
 
@@ -175,7 +184,7 @@ def JokeProgram():
             wraplength=300)
         CollectionJoke.pack(pady=10)
 
-        tk.Label(frame1, text="---------------------------", bg="#32a2a8").pack(pady=5)
+        tk.Label(frame1, text="---------------------------", bg=BgColour).pack(pady=5)
 
         ManualJoke = tk.Label(frame1, text="Add Joke:", font=("Ariel", 14, "bold"), fg='white', bg=BackgroundColour).pack(pady=5)
 
@@ -197,11 +206,12 @@ def JokeProgram():
         LoginButton.pack(pady=2)
 
         def Removerow():
-            RemoveRow = tk.Text(frame2, 
-                        height = 1, 
+            global RemoveRow
+            RemoveRow = tk.Entry(frame2, 
+                        #height = 1, 
                         width = 5) 
         
-            RemoveRow.place(x=50, y=50, anchor='sw')
+            RemoveRow.grid(column=2, row=1, sticky=N, pady=5)
 
 
             RemoveJoke = tk.Button(frame2, 
@@ -215,10 +225,10 @@ def JokeProgram():
                         height=1,
                         justify="center",
                         pady=5,
-                        width=5,
+                        width=7,
                         wraplength=300,
-                        bg="#3bccaa")
-            RemoveJoke.place(x=110, y=50, anchor='sw')
+                        bg=AccentColour1)
+            RemoveJoke.grid(column=2, row=0)
 
             def Drop_Row():
                 global Joke_df
@@ -227,12 +237,12 @@ def JokeProgram():
                 except:
                     pass
                 try:
-                    Joke_df = Joke_df.drop(index=(int(Removerow.get('1.0', 'end')) - 1)).reset_index(drop=True)
+                    Joke_df = Joke_df.drop(index=(int(RemoveRow.get()) - 1)).reset_index(drop=True)
                     try:
                         pt.destroy()
                     except:
                         pass
-                    pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=True, enable_menus=False)
+                    pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
                     pt.show()
                 except:
                     RowNotFound = tk.Label(frame2, text="Error - Row Not Found - Please Try Again", fg="Red").place(x=0, y=0)
@@ -321,6 +331,8 @@ def JokeProgram():
 
 def Login():
     global Username, Password, UsernameInput, PasswordInput
+
+    BackgroundColour = AccentColour1
     
     #--- Setup for Window ---
     top.geometry('250x400') # Size of Window
@@ -340,9 +352,9 @@ def Login():
             PasswordCreateInput.config(show='')
 
     # --- Login Section ---
-    tk.Label(top, text="Login", font=("Ariel", 14, "bold"), fg='white', bg="#32a2a8").pack(pady=(10, 5))
+    tk.Label(top, text="Login", font=("Ariel", 14, "bold"), fg='white', bg=BgColour).pack(pady=(10, 5))
 
-    ErrorMessage = tk.Label(top, text='', fg="red", bg="#32a2a8", font=("Arial", 10,))
+    ErrorMessage = tk.Label(top, text='', fg="red", bg=BgColour, font=("Arial", 10,))
     ErrorMessage.place(x=0,y=0)
 
     UsernameInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
@@ -358,16 +370,16 @@ def Login():
     PasswordInput.bind("<FocusOut>", lambda e: (PasswordInput.insert(0, "Password"), PasswordInput.config(fg="grey", show="*")) if PasswordInput.get() == "" else None)
     PasswordInput.pack(pady=2)
 
-    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg="#32a2a8")
+    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg=BgColour)
     ShowPassword.pack(pady=2)
 
-    LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
+    LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg=BackgroundColour, cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
     LoginButton.pack(pady=2)
 
-    tk.Label(top, text="---------------------------", bg="#32a2a8").pack(pady=5)
+    tk.Label(top, text="---------------------------", bg=BgColour).pack(pady=5)
 
     # --- Create Account Section ---
-    tk.Label(top, text="Create Account", font=("Arial", 14, "bold"), fg='white', bg="#32a2a8").pack(pady=(5, 5))
+    tk.Label(top, text="Create Account", font=("Arial", 14, "bold"), fg='white', bg=BgColour).pack(pady=(5, 5))
 
     UsernameCreateInput = tk.Entry(top, width=25, fg="grey", font=("Arial", 10, "italic"), justify="center")
     UsernameCreateInput.insert(0, "Create Username")
@@ -381,10 +393,10 @@ def Login():
     PasswordCreateInput.bind("<FocusOut>", lambda e: (PasswordCreateInput.insert(0, "Create Password"), PasswordCreateInput.config(fg="grey", show="*")) if PasswordCreateInput.get() == "" else None)
     PasswordCreateInput.pack(pady=2)
 
-    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg="#32a2a8")
+    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg=BgColour)
     ShowPasswordSignUp.pack(pady=2)
 
-    CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg="#3bccaa", cursor="hand2", command=lambda: [CreateAccount(UsernameCreateInput.get(), PasswordCreateInput.get())])
+    CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg=BackgroundColour, cursor="hand2", command=lambda: [CreateAccount(UsernameCreateInput.get(), PasswordCreateInput.get())])
     CreateAccountButton.pack(pady=2)
     
     
