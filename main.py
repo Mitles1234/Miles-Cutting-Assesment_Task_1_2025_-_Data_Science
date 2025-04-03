@@ -29,14 +29,12 @@ def JokeProgram():
     
 
     BackgroundColour = BgColour
-    JokeWindow['bg'] = BackgroundColour
+    #JokeWindow['bg'] = BackgroundColour
 
     #------ GUI Setup ------
     JokeWindow.geometry('600x400')
     JokeWindow.title('A Funny App')
     JokeWindow.iconbitmap('OtherFiles/AppIcon.ico')
-
-    JokeWindow.attributes('-fullscreen',True)
     
     notebook = ttk.Notebook(JokeWindow)
     notebook.pack(pady=15, expand=True)
@@ -370,7 +368,7 @@ def Login():
     PasswordInput.bind("<FocusOut>", lambda e: (PasswordInput.insert(0, "Password"), PasswordInput.config(fg="grey", show="*")) if PasswordInput.get() == "" else None)
     PasswordInput.pack(pady=2)
 
-    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg=BgColour)
+    ShowPassword = tk.Checkbutton(top, text="Show Password", variable=HidePassword, onvalue=True, offvalue=False, command=lambda e: PasswordInput.config(show='*') and PasswordCreateInput.config(show='*') if HidePassword.get() else PasswordInput.config(show='') and PasswordCreateInput.config(show=''), fg='white', bg=BgColour)
     ShowPassword.pack(pady=2)
 
     LoginButton = tk.Button(top, text="Login", font=("Arial", 10, "bold"), width=20, bg=BackgroundColour, cursor="hand2", command=lambda: [Account(UsernameInput.get(), PasswordInput.get(), False)])
@@ -393,7 +391,7 @@ def Login():
     PasswordCreateInput.bind("<FocusOut>", lambda e: (PasswordCreateInput.insert(0, "Create Password"), PasswordCreateInput.config(fg="grey", show="*")) if PasswordCreateInput.get() == "" else None)
     PasswordCreateInput.pack(pady=2)
 
-    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, command=PasswordHidder, fg='white', bg=BgColour)
+    ShowPasswordSignUp = tk.Checkbutton(top, text="Show Password", variable=HidePassword, onvalue=True, offvalue=False, command=PasswordHidder, fg='white', bg=BgColour)
     ShowPasswordSignUp.pack(pady=2)
 
     CreateAccountButton = tk.Button(top, text="Create Account", font=("Arial", 10, "bold"), width=20, bg=BackgroundColour, cursor="hand2", command=lambda: [CreateAccount(UsernameCreateInput.get(), PasswordCreateInput.get())])
