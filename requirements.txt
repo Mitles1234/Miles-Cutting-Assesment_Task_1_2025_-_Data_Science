@@ -1,0 +1,8 @@
+requests
+pandas
+tkinter
+pandastable
+haslib
+csv
+os
+Fernet
