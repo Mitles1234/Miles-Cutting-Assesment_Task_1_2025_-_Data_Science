@@ -2,7 +2,7 @@ requests
 pandas
 tkinter
 pandastable
-haslib
+hashlib
 csv
 os
-Fernet
+cryptography
