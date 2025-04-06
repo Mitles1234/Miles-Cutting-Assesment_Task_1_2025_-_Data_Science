@@ -72,27 +72,22 @@ def JokeProgram(): # Runs the Entire Joke Program Window
     
     #--- Unencrypt Collection ---
     try: # Try this code, if it produces an error, run except
-        with open(f'Keys\{Username}.key', 'rb') as filekey:
+        with open(f'Keys\{Username}.key', 'rb') as filekey: # Sets key as the User's Key
             key = filekey.read()
             
-        # using the key
-        fernet = Fernet(key)
+        fernet = Fernet(key) # Loads key into the Unencrypytion funciton
         
-        # opening the encrypted file
-        with open(f'Users\{Username}\Collections.csv', 'rb') as enc_file:
+        with open(f'Users\{Username}\Collections.csv', 'rb') as enc_file: # Reads the Encrypted File
             encrypted = enc_file.read()
         
-        # decrypting the file
-        decrypted = fernet.decrypt(encrypted)
+        decrypted = fernet.decrypt(encrypted) # Decrypts the Files
         
-        # opening the file in write mode and
-        # writing the decrypted data
-        with open(f'Users\{Username}\Collections.csv', 'wb') as dec_file:
+        with open(f'Users\{Username}\Collections.csv', 'wb') as dec_file: # Saves the Unencrypted file replacing the encrypted file
             dec_file.write(decrypted)
             
-        Joke_df = pd.read_csv(f'Users\{Username}\Collections.csv')
+        Joke_df = pd.read_csv(f'Users\{Username}\Collections.csv') # Sets Joke_df/Collection Data frame to the Users Collection File
     except: 
-        Joke_df = pd.read_csv(f'Collections_Default.csv')
+        Joke_df = pd.read_csv(f'Collections_Default.csv')  # Sets Joke_df/Collection Data frame to the Default Collection File
 
     #--- Setup for Table ---
     pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
@@ -164,8 +159,8 @@ def JokeProgram(): # Runs the Entire Joke Program Window
             RollingJoke_df = pd.concat([RollingJoke_df.iloc[1:], pd.DataFrame([NewRollingJoke_df])], ignore_index=True)
             # Adds the New dataframe to the end of the old one, removing the first row of the old data frame, then reseting the index
 
-            JokeDisplaySetup.config(text = RollingJoke_df.iloc[2]['Setup']) 
-            JokeDisplayPunchline.config(text = RollingJoke_df.iloc[2]['Punchline'])
+            JokeDisplaySetup.config(text = JokeAPI.json()['setup']) # Used to by - RollingJoke_df.iloc[2]['Setup'], but it would then present jokes that the users discarded from their collection
+            JokeDisplayPunchline.config(text = JokeAPI.json()['punchline']) # Used to be - RollingJoke_df.iloc[2]['Punchline']
 
             JokeDisplaySetup.pack(pady=2) # Displays the new Setup for the joke to the User
             JokeDisplayPunchline.pack(pady=2) # Displays the new Punchline for the joke to the User
@@ -193,7 +188,7 @@ def JokeProgram(): # Runs the Entire Joke Program Window
         # If the Button is Pressed, it Send the Current Joke to the Collections Function, being displayed inside of the newly created button frame
         StoreJoke = tk.Button(ButtonFrame, 
                     text="👍 Store Joke", 
-                    command=lambda: [Collections(RollingJoke_df.iloc[2]['Setup'], RollingJoke_df.iloc[2]['Punchline']), DisplayJokes(), Removerow()],
+                    command=lambda: [Collections(JokeAPI.json()['setup'], JokeAPI.json()['punchline']), DisplayJokes(), Removerow()],
                     anchor="center",
                     bd=3,
                     cursor="hand2",
@@ -296,13 +291,14 @@ def JokeProgram(): # Runs the Entire Joke Program Window
         AddJokeButton = tk.Button(frame1, text="Add Joke", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(SetupInput.get(), PunchlineInput.get())])
         AddJokeButton.pack(pady=2)
 
-        def Removerow():
-            global RemoveRow
-            RemoveRow = tk.Entry(frame2, width = 5) 
+        def Removerow(): # This Function removes a row from the users collection, then it adds the removed row to the histroy, to fix any mistakes later
+            global RemoveRow # Globalises RemoveRow
+            RemoveRow = tk.Entry(frame2, width = 5) # Entry Widget to Type in the Row Number for deleting
         
-            RemoveRow.grid(column=1, row=0, sticky=E, padx=12)
+            RemoveRow.grid(column=1, row=0, sticky=E, padx=12) 
+            # Places the Textbox in the header row, sticking it to the left hand side (Closer to the Button) with 12 pixels of padding.
 
-            RemoveJoke = tk.Button(frame2, 
+            RemoveJoke = tk.Button(frame2, # If the Button is clicked, it runs Removerow()
                         text="- Row", 
                         command=lambda: [Drop_Row(), Removerow()],
                         anchor="center",
@@ -316,12 +312,12 @@ def JokeProgram(): # Runs the Entire Joke Program Window
                         width=7,
                         wraplength=300,
                         bg=AccentColour1)
-            RemoveJoke.grid(column=2, row=0)
+            RemoveJoke.grid(column=2, row=0)  # Places the Button on the margins of the Table (Above the scroll bar)
 
-            def Drop_Row():
-                global Joke_df, RollingJoke_df
+            def Drop_Row(): # This funciton on command removes a selected row
+                global Joke_df, RollingJoke_df # Globaises Joke_df and RollingJoke_df
                 try:
-                    RowNotFound.destroy()
+                    RowNotFound.destroy() # If their is an error message, resets it to blank
                 except:
                     pass
 
@@ -329,110 +325,102 @@ def JokeProgram(): # Runs the Entire Joke Program Window
                     NewRollingJoke_df = pd.DataFrame([{
                         'Setup': str(Joke_df.iloc[int(RemoveRow.get()) - 1]['Setup']),
                         'Punchline': str(Joke_df.iloc[int(RemoveRow.get()) - 1]['Punchline'])
-                    }])
+                    }]) # Creates a new dataframe with the Joke present in the row about to be removed
                     
                     RollingJoke_df = pd.concat([RollingJoke_df.iloc[1:], NewRollingJoke_df], ignore_index=True)
+                    # Adds the removed joke to the Users history, while also removing the oldest joke there
 
-                    
+                    RollingJoke_df = RollingJoke_df.reset_index(drop=True) # Resets the index of the History Dataframe
 
-                    RollingJoke_df = RollingJoke_df.reset_index(drop=True)
-
-                    Joke_df = Joke_df.drop(index=(int(RemoveRow.get()) - 1)).reset_index(drop=True)
+                    Joke_df = Joke_df.drop(index=(int(RemoveRow.get()) - 1)).reset_index(drop=True) # Removes the joke from the Users collection and resets the index
                     try:
-                        pt.destroy()
+                        pt.destroy() # Destroys the Collection Joke Table
                     except:
                         pass
                     pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
-                    pt.show()
+                    pt.show() # Redraws the Collections table with the updated data
 
                     try:
-                        RollingJokeTable.destroy()
+                        RollingJokeTable.destroy() # Destroys the History Joke Table
                     except:
                         pass
 
                     RollingJokeTable = Table(frame3, dataframe=RollingJoke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
-                    RollingJokeTable.show()
+                    RollingJokeTable.show() # Redraws the History table with the updated data
 
                 except:
                     RowNotFound = tk.Label(frame2, text="Error - Row Not Found - Please Try Again", fg="Red").place(x=0, y=0)
+                    # If their is an issue with removing the Row, prints an error message
                 
-        Removerow()  
+        Removerow() # Runs Remove row to display the elements setup there
 
-    def Collections(Setup, Punchline):
+    def Collections(Setup, Punchline): # Adds joke to Collection
         global Joke_df, NewJoke, pt
             
-        Setup.join(Setup.splitlines())
+        Setup.join(Setup.splitlines()) # Joins split lines to simplify the storing process
 
         NewJoke = {
         "Setup": Setup, 
         "Punchline": Punchline
-        }
-
-        # Create a dictionary with the data for the new row
+        } # Makes a dictionary with the Joke data from the parameters
 
         # Inserting the new row
-        Joke_df.loc[len(Joke_df)] = NewJoke
+        Joke_df.loc[len(Joke_df)] = NewJoke # Adds the new jokes to the Collection dataframe
 
         # Reset the index
-        Joke_df = Joke_df.reset_index(drop=True)
+        Joke_df = Joke_df.reset_index(drop=True) # Resets the collection dataframe index
         
         try:
-            pt.destroy()
+            pt.destroy() # Destroys the previous Collectionstable
         except:
             pass
         
         pt = Table(frame2, dataframe=Joke_df, showtoolbar=False, showstatusbar=False, editable=False, enable_menus=False)
-        pt.show()
-        Removerow()
+        pt.show() # Redraws the table
+        Removerow() # Redisplays the buttons ontop of the tables
         
-    def SaveUpdates():
+    def SaveUpdates(): # Runs this Function instead of closing when pressing the 'X' button
         global JokeWindow, Joke_df, Username
-        try:
-            Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
-        except:
-            Userfolder = f"Users"  # This is the folder where keys will be stored
-            file_path_user = os.path.join(Userfolder, f"{Username}")
-            os.makedirs(file_path_user, exist_ok=True)
+        try: # If filepath exists, store the Collection dataframe at Collection.CSV underneath the user folder
+            Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False) # Stores file at the User directory
 
-            Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False)
+        except: # If filepath doesnt exist, create the filepath, then save it at Collection.CSV underneath the user folder
+            Userfolder = f"Users"  # Sets Userfolder as 'Users'
+            file_path_user = os.path.join(Userfolder, f"{Username}") # Creates directory combining Userfolder, and 'Username'
+            os.makedirs(file_path_user, exist_ok=True) # Makes filepath
+
+            Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False) # Stores Collection.csv at the newly created Collection
         
         directory = "Keys"  # This is the folder where keys will be stored
-        file_path = os.path.join(directory, f"{Username}.key")  # Define the actual key file
+        file_path = os.path.join(directory, f"{Username}.key")  # Define the key directory for the individual user
 
-            # Ensure the directory exists before saving the key
-        os.makedirs(directory, exist_ok=True)  # Creates 'Keys' folder if it doesn't exist
+        os.makedirs(directory, exist_ok=True) # If the directory doesn't exist, makes it, else, it moves on
 
-        # opening the key
-        with open(file_path, 'rb') as filekey:
+        with open(file_path, 'rb') as filekey: # Reads the Key and sets key as the Users key
             key = filekey.read()
         
-        # using the generated key
-        fernet = Fernet(key)
+        fernet = Fernet(key) # Defines the key into the Unencryption function
 
-        # opening the original file to encrypt
-        with open(f'Users\{Username}\Collections.csv', 'rb') as file:
+        with open(f'Users\{Username}\Collections.csv', 'rb') as file: # Reads the Users collection file
             original = file.read()
             
-        # encrypting the file
-        encrypted = fernet.encrypt(original)
+        encrypted = fernet.encrypt(original) # Encrypts the Collections files
         
-        # opening the file in write mode and 
-        # writing the encrypted data
-        with open(f'Users\{Username}\Collections.csv', 'wb') as encrypted_file:
+        with open(f'Users\{Username}\Collections.csv', 'wb') as encrypted_file: # Saves the collections File
             encrypted_file.write(encrypted)
             
         try:
-            JokeWindow.destroy()
+            JokeWindow.destroy() # Closes the Joke Program
         except:
             pass
         try:
-            top.destroy()
+            top.destroy() # Closes the Login Program
         except:
             pass
         
-    JokeWindow.protocol('WM_DELETE_WINDOW', SaveUpdates) # call function() when window is closed
+    JokeWindow.protocol('WM_DELETE_WINDOW', SaveUpdates) # Replaces the 'X' button with the Save Updates function
 
-    JokeCuration()
+    JokeCuration() # Runs Joke Curation Program
 
 #----- LOGIN PROGRAM -----
 def Login(): # Runs the Entire Login Window
