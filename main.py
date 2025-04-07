@@ -6,7 +6,7 @@
 import requests
 
 #--- Pandas ---
-# Is used to create data frames, and store infomation. Pandastable is used for displaying that information
+# Is used to create data frames, and store information. Pandastable is used for displaying that information
 import pandas as pd
 from pandastable import Table, TableModel
 
@@ -26,7 +26,7 @@ import os
 
 #--- Encryption ---
 # Is used to encrypt specific data, or entire files in a range of unique formats. 
-# Hashlib is used for SHA256 ecrpyting, while cryptopgraphy allows for encrypting entire files with a key
+# Hashlib is used for SHA256 encrypting, while cryptopgraphy allows for encrypting entire files with a key
 import hashlib
 from cryptography.fernet import Fernet
 
@@ -37,14 +37,18 @@ BgColour = "#32a2a8" # Sets the Background Colour to be used throughout the prog
 AccentColour1 = "#3bccaa" # Sets the Accent Colour to be used throughout the program
 
 #--- Setup Login ---
-Login_df = pd.read_csv('Login.csv') # Creates the Login_df pulled from the Login.csv which allows it to be used accross multiple sessions
+Login_df = pd.read_csv('Login.csv') # Creates the Login_df pulled from the Login.csv which allows it to be used across multiple sessions
 
 #--- Setup Tkinter ---
 top = Tk() # Sets 'top' as the top level for widget in the program
 top['bg'] = BgColour # Sets the background for 'top' to be the Background Colour chosen earlier
 
 #----- JOKE PROGRAM -----
-def JokeProgram(): # Runs the Entire Joke Program Window
+def JokeProgram():
+    '''
+    This function runs the Joke program window after the Login window has been used. Running this program opens a new 'main' windows, that contains the Joke Curation tab,
+    the Joke Collection tab, and the Joke History tab. It also contains the code for encrypting and decrypting user collection files on opening and closing of the program.
+    '''
     global JokeWindow, Joke_df, RollingJoke
     JokeWindow = Tk() # Sets 'JokeWindow' as the Top of the Program
 
@@ -97,6 +101,10 @@ def JokeProgram(): # Runs the Entire Joke Program Window
 
 
     def JokeCuration(): # Majority of Setup for the Widgets/Elements in the Main program
+        '''
+        This function runs the program that sets up different parts of GUI, and curating process. This function contains the code that sets up the history system, the API 
+        functionality, and places many elements of the GUI.
+        '''
         global JokeAPI, Removerow, RollingJoke, RollingJoke_df, RollingJokeTable, AddJokeButton
 
         Joke = tk.Label(frame1, text="Joke:", font=("Ariel", 14, "bold"), fg='white', bg=BgColour).pack(pady=(30, 5)) 
@@ -119,7 +127,7 @@ def JokeProgram(): # Runs the Entire Joke Program Window
                 # Creates a new DF with the same columns, but a row, filled with the information from the JSON file retrieved from the API file
             except:
                 NewRollingJoke_df = {'Setup': f'Error 404 - API Not Responding', 'Punchline': f'Please use the Non-API Functions'}
-                # If the API File doesnt respond, replace the information in the table with the an error code which will be presented to the User
+                # If the API File doesn't respond, replace the information in the table with the an error code which will be presented to the User
             
             RollingJoke_df.loc[len(RollingJoke_df)] = NewRollingJoke_df
             # Adds the New dataframe to the end of the old one
@@ -288,7 +296,7 @@ def JokeProgram(): # Runs the Entire Joke Program Window
         # If the User clicks a key, and the field is not filled in with 'Punchline', it sets the colour to black, otherwise it is set to grey, indicating it is not filled in
         PunchlineInput.pack(pady=2) # Displays the Punchline Input field underneath the previous element
 
-        AddJokeButton = tk.Button(frame1, text="Add Joke", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(SetupInput.get(), PunchlineInput.get())])
+        AddJokeButton = tk.Button(frame1, text="Add Joke", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(SetupInput.get(), PunchlineInput.get()), SetupInput.delete(0, tk.END), PunchlineInput.delete(0, tk.END)])
         AddJokeButton.pack(pady=2)
 
         def Removerow(): # This Function removes a row from the users collection, then it adds the removed row to the histroy, to fix any mistakes later
@@ -315,7 +323,7 @@ def JokeProgram(): # Runs the Entire Joke Program Window
             RemoveJoke.grid(column=2, row=0)  # Places the Button on the margins of the Table (Above the scroll bar)
 
             def Drop_Row(): # This funciton on command removes a selected row
-                global Joke_df, RollingJoke_df # Globaises Joke_df and RollingJoke_df
+                global Joke_df, RollingJoke_df # Globalises Joke_df and RollingJoke_df
                 try:
                     RowNotFound.destroy() # If their is an error message, resets it to blank
                 except:

@@ -68,7 +68,7 @@ Store Jokes – User adds the jokes to their collection; system confirms storage
 
 Random Jokes – User requests random joke from their collection; system retrieves and displays a random joke from their collection.
 
-Visualise Jokes – System displays a table with every joke, serperating the setup and punchline.
+Visualise Jokes – System displays a table with every joke, separating the setup and punchline.
 
 Remove Joke – User deletes a joke from their collection; system updates storage.
 
@@ -109,7 +109,7 @@ BEGIN Main()
             JokeCollection(Joke)
         ELIF User Clicks Thumbs Down:
             JokeBackLog(Joke)
-        IF User clicks 
+        ELIF User clicks 
         ELSE:
             PASS
         ENDIF
@@ -173,7 +173,7 @@ END Main()
 | RollingJoke\_df | Pandas DF | Table |  | Whole Display | A table with two columns, and always 5 rows with an index that stores the setup and punchline of each joke in itself. | Setup, Punchline A man walks into a bar, His friend says, are you okay? | A table with five rows and two columns, filled with strings. |
 
 
-### Project Development Commits:
+### Testing and Debugging: Project Development Commits
 #### 03/03/2025: School  
 Created the files I would be using over the timeline of the Assessment Task which included:  
  \- main.py  
@@ -331,17 +331,26 @@ Finished the code comments, and Finished the theory element of the project.
 
 
 ### Maintainence:
-1. The API I used has been running for a long time, with little to no changes in the amount of data, and the format for the data, however, in the event of it changing, because of How I handled implimenting the API, the user would still be able to use a range of features and elements of the software until I fixed it. Fixing it would be a simple process, changing only a few lines of code. If the API completely shut down, it wouls still be quick, easy, and effective to switch to another API that provides similar functionality.
+1. The API I used has been running for a long time, with little to no changes in the amount of data, and the format for the data, however, in the event of it changing, because of How I handled implementing the API, the user would still be able to use a range of features and elements of the software until I fixed it. Fixing it would be a simple process, changing only a few lines of code. If the API completely shut down, it would still be quick, easy, and effective to switch to another API that provides similar functionality.
 
 2. When designing my program, Pandas specifically mentioned the use of specific functions losing functionality in later updates of python, which was the Append method that added rows to dataframes. So while I was developing the program, I took notice of which functions where going to remain in service, and which ones wouldn't. IDK
 
-3. After deployment, if I found a Bug, I would alert the users of the software, letting them know their was an issue with the program, what parts of the program it affected, and provide a helpful work around until the problem could be addressed, and a rough timeline for solving the problem. Then I would start working on solving the problem, and release a new version of the softwre to the userbase, with the bug fixed.
+3. After deployment, if I found a Bug, I would alert the users of the software, letting them know their was an issue with the program, what parts of the program it affected, and provide a helpful work around until the problem could be addressed, and a rough timeline for solving the problem. Then I would start working on solving the problem, and release a new version of the software to the user base, with the bug fixed.
 
 4. Due to the extensive documentation throughout my code, I can easily use the ctrl+f feature to find elements of my code that preform different actions, then read the comments for what each line does easily, and effectively.
 
 ### Evaluation:
-1. My program meets all of my funcitonal and non-functional requirements and specifications effectively and completely, and then adds more features on top of it. While my program doesn't look or function in the way I first intended and wanted it to, it still met the criteria I set in a effective way. 
+1. My program meets all of my functional and non-functional requirements and specifications effectively and completely, and then adds more features on top of it. While my program doesn't look or function in the way I first intended and wanted it to, it still met the criteria I set in a effective way. 
 
-2. Their are 3 key areas where I feel as though my program could be improved upon. The first is my rolling joke feature to pull the API in the background didn't work, slowing the software. With more experience with python and programming as a whole, this is something I believe I can achieve, however with my limited knowledge, it was beyond the scope for this project. The next key feature I wanted to add was specialised/themed jokes. In the API I used, and many API's like it, it gave a theme that the joke fell under, such as Programming Joke, or Animal Joke. Allowing the user to chose these specific jokes would be an excellect feature to add, however the API's repository of jokes was very small, and adding this feature would mean the Jokes presented would be repeative. Building on that point, the final thing I would improve upon again in this program is using a different API, that provides more features and content to be explored in the program.
+2. Their are 3 key areas where I feel as though my program could be improved upon. The first is my rolling joke feature to pull the API in the background didn't work, slowing the software. With more experience with python and programming as a whole, this is something I believe I can achieve, however with my limited knowledge, it was beyond the scope for this project. The next key feature I wanted to add was specialised/themed jokes. In the API I used, and many API's like it, it gave a theme that the joke fell under, such as Programming Joke, or Animal Joke. Allowing the user to chose these specific jokes would be an excellent feature to add, however the API's repository of jokes was very small, and adding this feature would mean the Jokes presented would be repeating. Building on that point, the final thing I would improve upon again in this program is using a different API, that provides more features and content to be explored in the program.
 
-3. My time management with the project wall overall very good. I have finished it almost a full week before the due date, and everytime I worked on the project, it was meaningful improvements, that contributed heavily towards the final product. However, the project I made wasn't correctly scoped for this project, with the timeline of development for the project being to variable, which led me adding non-critical features before more important ones, which led to my code being more complex than it needed to, or should have been. If I where to do this project again, I would spend more time on the theory at the start of the project, and add a new section just for my use, that clearly states what feature I will add, How I will add it, and how it will interact with the program. While my code is still very light and easy to run, their are a range of improvements I could have made to it that would have improved its functionality, scalability of features, and usefulness as a program.
+3. My time management with the project wall overall very good. I have finished it almost a full week before the due date, and every time I worked on the project, it was meaningful improvements, that contributed heavily towards the final product. However, the project I made wasn't correctly scoped for this project, with the timeline of development for the project being to variable, which led me adding non-critical features before more important ones, which led to my code being more complex than it needed to, or should have been. If I where to do this project again, I would spend more time on the theory at the start of the project, and add a new section just for my use, that clearly states what feature I will add, How I will add it, and how it will interact with the program. While my code is still very light and easy to run, their are a range of improvements I could have made to it that would have improved its functionality, scalability of features, and usefulness as a program.
+
+### Peer Evaluations:
+
+Rufus:
+> generally good program but lacks some polish and is somewhat annoying when trying to view joke collection as you half to scroll after every input or it is not visible. I disliked some of the jokes as well. All in all 7/10
+
+Max:
+> I thought the user interface was very polished, with nice tabs and login; it could have used instructions or a help screen at times, but all in all, very nice program, would get for my computer if I could.
+
