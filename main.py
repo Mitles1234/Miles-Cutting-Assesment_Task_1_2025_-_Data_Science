@@ -153,7 +153,10 @@ def JokeProgram():
             AddJokeButton4 = tk.Button(RollingButtonFrame, text="Add Joke (4)", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(RollingJoke_df.iloc[3]["Setup"], RollingJoke_df.iloc[3]["Punchline"])]).pack(side="top")
             AddJokeButton5 = tk.Button(RollingButtonFrame, text="Add Joke (5)", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(RollingJoke_df.iloc[4]["Setup"], RollingJoke_df.iloc[4]["Punchline"])]).pack(side="top")
 
-        def DisplayJokes(): # Displays a new Joke, and updates the history
+        def DisplayJokes():
+            '''
+            This function displayes the new jokes, and updates the history funciton of the joke storage.
+            '''
             global JokeAPI, RollingJoke_df
             try:
                 JokeAPI = requests.get('https://joke.deno.dev/') # Sets JokeAPI to the JSON file at the end of that link (Is reset each time to get a new joke)
@@ -238,6 +241,9 @@ def JokeProgram():
         CollectionDisplayPunchline.pack(pady=2)
 
         def RandomCollectionJoke():
+            '''
+            This gets a random joke from the users collection file, and displays it.
+            '''
             try:
                 CollectionJoke_df.iloc[:0] # Resets the 'CollectionJoke_df' to be empty
             except:
@@ -299,7 +305,10 @@ def JokeProgram():
         AddJokeButton = tk.Button(frame1, text="Add Joke", font=("Arial", 10, "bold"), width=20, cursor="hand2", command=lambda: [Collections(SetupInput.get(), PunchlineInput.get()), SetupInput.delete(0, tk.END), PunchlineInput.delete(0, tk.END)])
         AddJokeButton.pack(pady=2)
 
-        def Removerow(): # This Function removes a row from the users collection, then it adds the removed row to the histroy, to fix any mistakes later
+        def Removerow(): 
+            '''
+            This Function removes a row from the users collection, then it adds the removed row to the histroy, to fix any mistakes later
+            '''
             global RemoveRow # Globalises RemoveRow
             RemoveRow = tk.Entry(frame2, width = 5) # Entry Widget to Type in the Row Number for deleting
         
@@ -322,7 +331,10 @@ def JokeProgram():
                         bg=AccentColour1)
             RemoveJoke.grid(column=2, row=0)  # Places the Button on the margins of the Table (Above the scroll bar)
 
-            def Drop_Row(): # This funciton on command removes a selected row
+            def Drop_Row():
+                '''
+                This funciton on command removes a selected row by getting the number entered into the entry widget
+                '''
                 global Joke_df, RollingJoke_df # Globalises Joke_df and RollingJoke_df
                 try:
                     RowNotFound.destroy() # If their is an error message, resets it to blank
@@ -362,7 +374,10 @@ def JokeProgram():
                 
         Removerow() # Runs Remove row to display the elements setup there
 
-    def Collections(Setup, Punchline): # Adds joke to Collection
+    def Collections(Setup, Punchline):
+        '''
+        This function takes jokes provided from a source, and adds them to the Users colelction through the parameters.
+        '''
         global Joke_df, NewJoke, pt
             
         Setup.join(Setup.splitlines()) # Joins split lines to simplify the storing process
@@ -387,7 +402,10 @@ def JokeProgram():
         pt.show() # Redraws the table
         Removerow() # Redisplays the buttons ontop of the tables
         
-    def SaveUpdates(): # Runs this Function instead of closing when pressing the 'X' button
+    def SaveUpdates():
+        '''
+        Runs this Function instead of closing when pressing the 'X' button and saves the Users collection, and then closing the program
+        '''
         global JokeWindow, Joke_df, Username
         try: # If filepath exists, store the Collection dataframe at Collection.CSV underneath the user folder
             Joke_df.to_csv(path_or_buf=f'Users\{Username}\Collections.csv', index=False) # Stores file at the User directory
@@ -432,6 +450,9 @@ def JokeProgram():
 
 #----- LOGIN PROGRAM -----
 def Login(): # Runs the Entire Login Window
+    '''
+    This login function runs the code for making the login funciton work, displaying all the widgets, and containing how the user interacts with them.
+    '''
     global Username, UsernameInput, PasswordInput # Sets 3 Variables to be referenced and used throughout the Program
     
     #--- Setup for Window ---
@@ -520,7 +541,10 @@ def Login(): # Runs the Entire Login Window
     CreateAccountButton.pack(pady=2) # Displays the field underneath the previous element
     
     
-    def Account(User, Pass, Logedin): # This function handles Logging into the Software
+    def Account(User, Pass, Logedin):
+        '''
+        This function handles Logging into the Software
+        '''
         global Username # Globalises the Username Attribute Accross the program to be used in other functions
         if Logedin == False: # If the data has not been processed
             
@@ -572,6 +596,9 @@ def Login(): # Runs the Entire Login Window
                                     
 
     def CreateAccount(Username, Password):
+        '''
+        This function creates an account based of the Username and password from the parameters, it also checks for errors in it.
+        '''
         global Login_df # Globalises Login_df to be updated across other Functions
         
         Username = Username.join(Username.splitlines())  # Connects Lines together, removing Line breaks from the inputs
@@ -623,7 +650,11 @@ def Login(): # Runs the Entire Login Window
 
 
 #----- Saves Updates to Account ---
-def SaveUpdatesTop(): # Replaces the 'X' button for the top window with the commands inside of this function
+def SaveUpdatesTop():
+    '''
+    Replaces the 'X' button for the top window with the commands inside of this function
+    '''
+    
     global JokeWindow, Joke_df
     try: # Try to run these commands, if presented with an error, run except
         JokeWindow.destroy() # Closes JokeWindow Window
