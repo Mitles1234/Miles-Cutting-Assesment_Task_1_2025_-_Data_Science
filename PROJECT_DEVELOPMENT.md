@@ -117,6 +117,8 @@ BEGIN Main()
 END Main()
 ```
 
+![Structure Chart](Images/MainProgramFlowchart.png "MainProgramFlowchart")
+
 #### View Collection:
 ```
 BEGIN JokeCollection()
@@ -148,6 +150,8 @@ BEGIN JokeCollection()
 END Main()
 ```
 
+![Structure Chart](Images/JokeCollectionsProgramFlowchart.png "JokeCollectionsProgramFlowchart")
+
 #### Get New Joke
 ```
 BEGIN JokeCollection()
@@ -163,14 +167,14 @@ BEGIN JokeCollection()
 END Main()
 ```
 
+![Structure Chart](Images/GetNewJokeProgramFlowchart.png "GetNewJokeProgramFlowchart")
+
 ### Data Dictionary: (Format For Joke Collection Storing)
 | Variable | Data Type | Format for Display | Size in Bytes | Size for Display | Description | Example | Validation |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
 | Joke index in Table | Integer | NNNN | 4 | 4 | A unique code for each joke, to make sorting for random jokes faster and more reliable. | 1385 | A 4 digit long code |
 | Joke Setup | String | XXX…XXX | 200 | 200 | The setup of each joke | A man walks into a bar | A string under 201 characters |
 | Joke Punchline | String | XXX…XXX | 200 | 200 | The punchline of each joke | His friend says, are you okay? | A string under 201 characters |
-| Joke\_df | Pandas DF | Table |  | Whole Display | A table with two columns and an index that stores the setup and punchline of each joke in itself. | Setup, Punchline A man walks into a bar, His friend says, are you okay? | A table with at least one row and two columns, filled with strings. |
-| RollingJoke\_df | Pandas DF | Table |  | Whole Display | A table with two columns, and always 5 rows with an index that stores the setup and punchline of each joke in itself. | Setup, Punchline A man walks into a bar, His friend says, are you okay? | A table with five rows and two columns, filled with strings. |
 
 
 ### Testing and Debugging: Project Development Commits
@@ -328,6 +332,19 @@ Tomorrow's job is to finish the code comments.
 
 #### 06/04/2025: Home  
 Finished the code comments, and Finished the theory element of the project.
+
+#### 07/04/2025: School
+Polished of a few parts of the theory.
+
+Next at home is finishing the flowcharts.
+
+#### 07/04/2025: Home
+Finished the Flowcharts, README.
+
+Next is getting clarification on the data dictionary and submitting.
+
+#### 08/04/2025: School
+Got clarification on the Data dictionary, and am now submitting the task.
 
 
 ### Maintainence:
